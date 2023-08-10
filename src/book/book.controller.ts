@@ -1,8 +1,18 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { BookService } from './book.service';
 import { Book } from './schemas/book.schema';
+import { CreateBookDto } from './dto/create-book.dto';
+import { UpdateBookDto } from './dto/update-book-dto';
 
-@Controller('book')
+@Controller('books')
 export class BookController {
   constructor(private bookService: BookService) {}
 
@@ -14,8 +24,34 @@ export class BookController {
   @Post()
   async create(
     @Body()
-    book: Book,
+    book: CreateBookDto,
   ): Promise<Book> {
-    return this.bookService.create(book);
+    return await this.bookService.create(book);
+  }
+
+  @Get(':id')
+  async getBookById(
+    @Param('id')
+    id: string,
+  ): Promise<Book> {
+    return this.bookService.findById(id);
+  }
+
+  @Put(':id')
+  async createBook(
+    @Param('id')
+    id: string,
+    @Body()
+    book: UpdateBookDto,
+  ): Promise<Book> {
+    return this.bookService.updateById(id, book);
+  }
+
+  @Delete(':id')
+  async deleteBookById(
+    @Param('id')
+    id: string,
+  ): Promise<Book> {
+    return this.bookService.deleteById(id);
   }
 }
