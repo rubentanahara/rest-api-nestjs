@@ -1,24 +1,24 @@
-import { IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 import { Category } from '../schemas/book.schema';
 
-export class UpdateBookDto {
-  @IsOptional()
+export class CreateBookDto {
+  @IsNotEmpty()
   @IsString()
   readonly title: string;
 
-  @IsOptional()
+  @IsNotEmpty()
   @IsString()
   readonly description: string;
 
-  @IsOptional()
+  @IsNotEmpty()
   @IsString()
   readonly author: string;
 
-  @IsOptional()
+  @IsNotEmpty()
   @IsNumber()
   readonly price: number;
 
-  @IsOptional()
+  @IsNotEmpty()
   @IsEnum(Category, { message: 'Please enter correct category.' })
   readonly category: Category;
 }
