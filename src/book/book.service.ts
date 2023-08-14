@@ -1,55 +1,71 @@
-// Import necessary modules and classes from NestJS and Mongoose
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { Book } from './schemas/book.schema';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import * as mongoose from 'mongoose';
+import { Book } from './schemas/book.schema';
+
+import { Query } from 'express-serve-static-core';
 
 @Injectable()
 export class BookService {
   constructor(
-    // Inject the Book model from Mongoose into the service
     @InjectModel(Book.name)
-    private readonly bookModel: mongoose.Model<Book>,
+    private bookModel: mongoose.Model<Book>,
   ) {}
 
-  // Function to retrieve all books from the database
-  async findAll(): Promise<Book[]> {
-    // Use the bookModel to find all documents in the collection and execute the query
-    return await this.bookModel.find().exec();
+  async findAll(query: Query): Promise<Book[]> {
+    const resPerPage = 2;
+    const currentPage = Number(query.page) || 1;
+    const skip = resPerPage * (currentPage - 1);
+
+    const keyword = query.keyword
+      ? {
+          title: {
+            $regex: query.keyword, // match title
+            $options: 'i', // case insensitive
+          },
+        }
+      : {};
+
+    const books = await this.bookModel
+      .find({ ...keyword })
+      .limit(resPerPage)
+      .skip(skip);
+    return books;
   }
 
-  // Function to create a new book document in the database
   async create(book: Book): Promise<Book> {
-    // Use the bookModel to create a new document based on the provided book data
-    const result = await this.bookModel.create(book);
-    return result;
+    const res = await this.bookModel.create(book);
+    return res;
   }
 
-  // Function to find a book by its ID in the database
   async findById(id: string): Promise<Book> {
-    // Use the bookModel to find a document by its ID
-    const book = await this.bookModel.findById(id);
-    console.log(book);
+    const isValidId = mongoose.isValidObjectId(id);
 
-    // If no book is found with the provided ID, throw a NotFoundException
-    if (!book) {
-      throw new NotFoundException('Book not found');
+    if (!isValidId) {
+      throw new BadRequestException('Please enter correct id.');
     }
+
+    const book = await this.bookModel.findById(id);
+
+    if (!book) {
+      throw new NotFoundException('Book not found.');
+    }
+
     return book;
   }
 
-  // Function to update a book document by its ID
   async updateById(id: string, book: Book): Promise<Book> {
-    // Use the bookModel to find and update a document by its ID with the provided book data
     return await this.bookModel.findByIdAndUpdate(id, book, {
-      new: true, // Return the updated document
-      runValidators: true, // Run Mongoose validators on update
+      new: true,
+      runValidators: true,
     });
   }
 
-  // Function to delete a book document by its ID
   async deleteById(id: string): Promise<Book> {
-    // Use the bookModel to find and delete a document by its ID
     return await this.bookModel.findByIdAndDelete(id);
   }
 }
