@@ -1,4 +1,5 @@
-import {
+import
+{
   Body,
   Controller,
   Delete,
@@ -19,47 +20,53 @@ import { Query as ExpressQuery } from 'express-serve-static-core';
 import { AuthGuard } from '@nestjs/passport';
 
 @Controller('books')
-export class BookController {
-  constructor(private bookService: BookService) {}
+export class BookController
+{
+  constructor (private bookService: BookService) {}
 
   @Get()
-  async getAllBooks(@Query() query: ExpressQuery): Promise<Book[]> {
+  async getAllBooks (@Query() query: ExpressQuery): Promise<Book[]>
+  {
     return this.bookService.findAll(query);
   }
 
   @Post()
   @UseGuards(AuthGuard())
-  async createBook(
+  async createBook (
     @Body()
     book: CreateBookDto,
     @Req() req,
-  ): Promise<Book> {
-    return this.bookService.create(book, req.user);
+  ): Promise<Book>
+  {
+    return this.bookService.create(book,req.user);
   }
 
   @Get(':id')
-  async getBook(
+  async getBook (
     @Param('id')
     id: string,
-  ): Promise<Book> {
+  ): Promise<Book>
+  {
     return this.bookService.findById(id);
   }
 
   @Put(':id')
-  async updateBook(
+  async updateBook (
     @Param('id')
     id: string,
     @Body()
     book: UpdateBookDto,
-  ): Promise<Book> {
-    return this.bookService.updateById(id, book);
+  ): Promise<Book>
+  {
+    return this.bookService.updateById(id,book);
   }
 
   @Delete(':id')
-  async deleteBook(
+  async deleteBook (
     @Param('id')
     id: string,
-  ): Promise<Book> {
+  ): Promise<Book>
+  {
     return this.bookService.deleteById(id);
   }
 }

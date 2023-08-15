@@ -1,13 +1,14 @@
-import { Test, TestingModule } from '@nestjs/testing';
+import { Test,TestingModule } from '@nestjs/testing';
 import { getModelToken } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { AuthService } from './auth.service';
 import { User } from './schemas/user.schema';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
-import { ConflictException, UnauthorizedException } from '@nestjs/common';
+import { ConflictException,UnauthorizedException } from '@nestjs/common';
 
-describe('AuthService', () => {
+describe('AuthService',() =>
+{
   let authService: AuthService;
   let model: Model<User>;
   let jwtService: JwtService;
@@ -25,7 +26,8 @@ describe('AuthService', () => {
     findOne: jest.fn(),
   };
 
-  beforeEach(async () => {
+  beforeEach(async () =>
+  {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         AuthService,
@@ -42,24 +44,27 @@ describe('AuthService', () => {
     jwtService = module.get<JwtService>(JwtService);
   });
 
-  it('should be defined', () => {
+  it('should be defined',() =>
+  {
     expect(authService).toBeDefined();
   });
 
-  describe('signUp', () => {
+  describe('signUp',() =>
+  {
     const signUpDto = {
       name: 'Ghulam',
       email: 'ghulam1@gmail.com',
       password: '12345678',
     };
 
-    it('should register the new user', async () => {
-      jest.spyOn(bcrypt, 'hash').mockResolvedValue('hashedPassword');
+    it('should register the new user',async () =>
+    {
+      jest.spyOn(bcrypt,'hash').mockResolvedValue('hashedPassword');
       jest
-        .spyOn(model, 'create')
+        .spyOn(model,'create')
         .mockImplementationOnce(() => Promise.resolve(mockUser));
 
-      jest.spyOn(jwtService, 'sign').mockReturnValue('jwtToken');
+      jest.spyOn(jwtService,'sign').mockReturnValue('jwtToken');
 
       const result = await authService.signUp(signUpDto);
 
@@ -67,9 +72,10 @@ describe('AuthService', () => {
       expect(result).toEqual({ token });
     });
 
-    it('should throw duplicate email entered', async () => {
+    it('should throw duplicate email entered',async () =>
+    {
       jest
-        .spyOn(model, 'create')
+        .spyOn(model,'create')
         .mockImplementationOnce(() => Promise.reject({ code: 11000 }));
 
       await expect(authService.signUp(signUpDto)).rejects.toThrow(
@@ -78,34 +84,38 @@ describe('AuthService', () => {
     });
   });
 
-  describe('logIn', () => {
+  describe('logIn',() =>
+  {
     const loginDto = {
       email: 'ghulam1@gmail.com',
       password: '12345678',
     };
 
-    it('should login user and return the token', async () => {
-      jest.spyOn(model, 'findOne').mockResolvedValueOnce(mockUser);
+    it('should login user and return the token',async () =>
+    {
+      jest.spyOn(model,'findOne').mockResolvedValueOnce(mockUser);
 
-      jest.spyOn(bcrypt, 'compare').mockResolvedValueOnce(true);
-      jest.spyOn(jwtService, 'sign').mockReturnValue(token);
+      jest.spyOn(bcrypt,'compare').mockResolvedValueOnce(true);
+      jest.spyOn(jwtService,'sign').mockReturnValue(token);
 
       const result = await authService.login(loginDto);
 
       expect(result).toEqual({ token });
     });
 
-    it('should throw invalid email error', async () => {
-      jest.spyOn(model, 'findOne').mockResolvedValueOnce(null);
+    it('should throw invalid email error',async () =>
+    {
+      jest.spyOn(model,'findOne').mockResolvedValueOnce(null);
 
       expect(authService.login(loginDto)).rejects.toThrow(
         UnauthorizedException,
       );
     });
 
-    it('should throw invalid password error', async () => {
-      jest.spyOn(model, 'findOne').mockResolvedValueOnce(mockUser);
-      jest.spyOn(bcrypt, 'compare').mockResolvedValueOnce(false);
+    it('should throw invalid password error',async () =>
+    {
+      jest.spyOn(model,'findOne').mockResolvedValueOnce(mockUser);
+      jest.spyOn(bcrypt,'compare').mockResolvedValueOnce(false);
 
       expect(authService.login(loginDto)).rejects.toThrow(
         UnauthorizedException,

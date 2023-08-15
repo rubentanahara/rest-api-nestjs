@@ -1,4 +1,5 @@
-import {
+import
+{
   ConflictException,
   Injectable,
   UnauthorizedException,
@@ -13,19 +14,22 @@ import { SignUpDto } from './dto/signUp.dto';
 import { LoginDto } from './dto/login.dto';
 
 @Injectable()
-export class AuthService {
-  constructor(
+export class AuthService
+{
+  constructor (
     @InjectModel(User.name)
     private userModel: Model<User>,
     private jwtService: JwtService,
   ) {}
 
-  async signUp(signUpDto: SignUpDto): Promise<{ token: string }> {
-    const { name, email, password } = signUpDto;
+  async signUp (signUpDto: SignUpDto): Promise<{ token: string }>
+  {
+    const { name,email,password } = signUpDto;
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password,10);
 
-    try {
+    try
+    {
       const user = await this.userModel.create({
         name,
         email,
@@ -35,25 +39,30 @@ export class AuthService {
       const token = this.jwtService.sign({ id: user._id });
 
       return { token };
-    } catch (error) {
-      if (error?.code === 11000) {
+    } catch (error)
+    {
+      if (error?.code === 11000)
+      {
         throw new ConflictException('Duplicate Email Entered');
       }
     }
   }
 
-  async login(loginDto: LoginDto): Promise<{ token: string }> {
-    const { email, password } = loginDto;
+  async login (loginDto: LoginDto): Promise<{ token: string }>
+  {
+    const { email,password } = loginDto;
 
     const user = await this.userModel.findOne({ email });
 
-    if (!user) {
+    if (!user)
+    {
       throw new UnauthorizedException('Invalid email or password');
     }
 
-    const isPasswordMatched = await bcrypt.compare(password, user.password);
+    const isPasswordMatched = await bcrypt.compare(password,user.password);
 
-    if (!isPasswordMatched) {
+    if (!isPasswordMatched)
+    {
       throw new UnauthorizedException('Invalid email or password');
     }
 

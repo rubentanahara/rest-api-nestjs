@@ -1,4 +1,5 @@
-import {
+import
+{
   IsEmpty,
   IsEnum,
   IsNumber,
@@ -8,7 +9,8 @@ import {
 import { User } from '../../auth/schemas/user.schema';
 import { Category } from '../schemas/book.schema';
 
-export class UpdateBookDto {
+export class UpdateBookDto
+{
   @IsOptional()
   @IsString()
   readonly title: string;
@@ -26,7 +28,7 @@ export class UpdateBookDto {
   readonly price: number;
 
   @IsOptional()
-  @IsEnum(Category, { message: 'Please enter correct category.' })
+  @IsEnum(Category,{ message: 'Please enter correct category.' })
   readonly category: Category;
 
   @IsEmpty({ message: 'You cannot pass user id' })

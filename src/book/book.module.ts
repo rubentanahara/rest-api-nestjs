@@ -8,7 +8,7 @@ import { BookSchema } from './schemas/book.schema';
 @Module({
   imports: [
     AuthModule,
-    MongooseModule.forFeature([{ name: 'Book', schema: BookSchema }]),
+    MongooseModule.forFeature([{ name: 'Book',schema: BookSchema }]),
   ],
   controllers: [BookController],
   providers: [BookService],

@@ -13,7 +13,8 @@ import { UserSchema } from './schemas/user.schema';
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
       inject: [ConfigService],
-      useFactory: (config: ConfigService) => {
+      useFactory: (config: ConfigService) =>
+      {
         return {
           secret: config.get<string>('JWT_SECRET'),
           signOptions: {
@@ -22,10 +23,10 @@ import { UserSchema } from './schemas/user.schema';
         };
       },
     }),
-    MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
+    MongooseModule.forFeature([{ name: 'User',schema: UserSchema }]),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy],
-  exports: [JwtStrategy, PassportModule],
+  providers: [AuthService,JwtStrategy],
+  exports: [JwtStrategy,PassportModule],
 })
 export class AuthModule {}
