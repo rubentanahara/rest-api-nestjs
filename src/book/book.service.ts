@@ -1,9 +1,9 @@
 import
-{
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+  {
+    BadRequestException,
+    Injectable,
+    NotFoundException,
+  } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import * as mongoose from 'mongoose';
 import { Book } from './schemas/book.schema';
@@ -76,8 +76,9 @@ export class BookService
     });
   }
 
-  async deleteById (id: string): Promise<Book>
+  async deleteById (id: string): Promise<{ deleted: boolean }>
   {
-    return await this.bookModel.findByIdAndDelete(id);
+    await this.bookModel.findByIdAndDelete(id);
+    return { deleted: true };
   }
 }

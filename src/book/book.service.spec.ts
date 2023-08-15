@@ -60,11 +60,11 @@ describe('BookService',() =>
 
       jest.spyOn(model,'find').mockImplementation(
         () =>
-          ({
-            limit: () => ({
-              skip: jest.fn().mockResolvedValue([mockBook]),
-            }),
-          }) as any,
+        ({
+          limit: () => ({
+            skip: jest.fn().mockResolvedValue([mockBook]),
+          }),
+        } as any),
       );
 
       const result = await bookService.findAll(query);
@@ -172,7 +172,7 @@ describe('BookService',() =>
 
       expect(model.findByIdAndDelete).toHaveBeenCalledWith(mockBook._id);
 
-      expect(result).toEqual(mockBook);
+      expect(result).toEqual({ deleted: true });
     });
   });
 });
