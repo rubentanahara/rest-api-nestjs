@@ -19,14 +19,14 @@ describe('AuthService',() =>
     email: 'ghulam1@gmail.com',
   };
 
-  let token = 'jwtToken';
+  let token: string = 'jwtToken';
 
   const mockAuthService = {
     create: jest.fn(),
     findOne: jest.fn(),
   };
 
-  beforeEach(async () =>
+  beforeEach(async (): Promise<void> =>
   {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
