@@ -9,7 +9,7 @@ import { User } from './schemas/user.schema';
 
 import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
-import { SignUpDto } from './dto/signup.dto';
+import { SignUpDto } from './dto/signUp.dto';
 import { LoginDto } from './dto/login.dto';
 
 @Injectable()
