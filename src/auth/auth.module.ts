@@ -1,24 +1,23 @@
 import { Module } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { JwtModule } from '@nestjs/jwt';
+import { MongooseModule } from '@nestjs/mongoose';
+import { PassportModule } from '@nestjs/passport';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { MongooseModule } from '@nestjs/mongoose';
-import { UserSchema } from './schemas/user.schema';
-import { PassportModule } from '@nestjs/passport';
-import { JwtModule } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config';
 import { JwtStrategy } from './jwt.strategy';
+import { UserSchema } from './schemas/user.schema';
 
 @Module({
   imports: [
-    PassportModule.register({ defaultStrategy: 'jwt' }), //DEFAULT EXTRACT JWT FROM HEADER
+    PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
-      //REGISTER JWT MODULE
-      inject: [ConfigService], //INJECT CONFIG SERVICE
-      useFactory: (configService: ConfigService) => {
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => {
         return {
-          secret: configService.get<string>('JWT_SECRET'), //GET JWT SECRET FROM CONFIG SERVICE
+          secret: config.get<string>('JWT_SECRET'),
           signOptions: {
-            expiresIn: configService.get<string | number>('JWT_EXPIRES'), //GET JWT EXPIRES FROM CONFIG SERVICE
+            expiresIn: config.get<string | number>('JWT_EXPIRES'),
           },
         };
       },
