@@ -8,7 +8,7 @@ import * as mongoose from 'mongoose';
 import { Book } from './schemas/book.schema';
 
 import { Query } from 'express-serve-static-core';
-import { User } from 'src/auth/schemas/user.schema';
+import { User } from '../auth/schemas/user.schema';
 
 @Injectable()
 export class BookService {
@@ -18,23 +18,23 @@ export class BookService {
   ) {}
 
   async findAll(query: Query): Promise<Book[]> {
-    const resPerPage = 2; // results per page
-    const currentPage = Number(query.page) || 1; // Page
-    const skip = resPerPage * (currentPage - 1); // Skips
+    const resPerPage = 2;
+    const currentPage = Number(query.page) || 1;
+    const skip = resPerPage * (currentPage - 1);
 
-    const keyword = query.keyword // check if keyword exists
+    const keyword = query.keyword
       ? {
           title: {
-            $regex: query.keyword, // match title
-            $options: 'i', // case insensitive
+            $regex: query.keyword,
+            $options: 'i',
           },
         }
       : {};
 
     const books = await this.bookModel
-      .find({ ...keyword }) // find all books
-      .limit(resPerPage) // Limit Documents
-      .skip(skip); // Skip Documents
+      .find({ ...keyword })
+      .limit(resPerPage)
+      .skip(skip);
     return books;
   }
 

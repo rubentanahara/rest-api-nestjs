@@ -1,17 +1,12 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { User } from 'src/auth/schemas/user.schema';
-import * as mongoose from 'mongoose';
+import mongoose from 'mongoose';
+import { User } from '../../auth/schemas/user.schema';
 
 export enum Category {
   ADVENTURE = 'Adventure',
-  DRAMA = 'Drama',
+  CALSSICS = 'Classics',
+  CRIME = 'Crime',
   FANTASY = 'Fantasy',
-  HORROR = 'Horror',
-  MYSTERY = 'Mystery',
-  ROMANCE = 'Romance',
-  THRILLER = 'Thriller',
-  WESTERN = 'Western',
-  DYSTOPIA = 'Dystopia',
 }
 
 @Schema({
@@ -32,6 +27,7 @@ export class Book {
 
   @Prop()
   category: Category;
+
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
   user: User;
 }
